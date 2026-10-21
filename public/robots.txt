@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://shiny-chimera-4ab813.netlify.app/sitemap.xml
