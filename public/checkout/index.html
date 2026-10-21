@@ -1,0 +1,107 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Checkout | SHAY AI Academy</title><link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"><style>*{box-sizing:border-box}body{margin:0;background:#080d1c;color:#eef1ff;font:16px system-ui,Tahoma,sans-serif;line-height:1.65}main{max-width:720px;margin:auto;padding:28px}header{display:flex;align-items:center;justify-content:space-between;gap:12px}header a{color:inherit;text-decoration:none}h1{font-size:clamp(1.8rem,5vw,2.6rem);line-height:1.2;margin:32px 0 8px}.muted{color:#aab7d4}.card{border:1px solid #384363;border-radius:20px;padding:24px;background:#151d34;margin:20px 0}.btn,button{background:#8b5cf6;border:0;color:#fff;text-decoration:none;padding:12px 16px;border-radius:11px;display:inline-block;font:inherit;cursor:pointer}button:disabled{opacity:.5;cursor:wait}.ghost{background:#303c5d}label{display:block;margin:12px 0 6px;color:#c9d3ee}input{width:100%;padding:12px 14px;border-radius:11px;border:1px solid #384363;background:#0d1428;color:#eef1ff;font:inherit}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px}.kv{display:grid;grid-template-columns:auto 1fr auto;gap:8px 12px;align-items:center}.kv dt{color:#aab7d4}.kv dd{margin:0;font-family:ui-monospace,monospace;word-break:break-all}.amount{font-size:30px;font-weight:800;color:#fff}.copy{padding:6px 10px;font-size:13px;background:#303c5d}.note{border-left:3px solid #b798ff;padding:14px;background:#1c2540;border-radius:6px}body[dir=rtl] .note{border-left:0;border-right:3px solid #b798ff}.warn{border-color:#f5b84b}.err{color:#ff9b9b}.ok{color:#7ee2a8}.status{font-weight:700}[hidden]{display:none!important}footer{margin:40px 0;color:#9ba7c2;font-size:14px}footer a{color:#c2a9ff}@media(max-width:520px){.kv{grid-template-columns:1fr}.copy{justify-self:start}}</style></head><body><main>
+<header><a href="/"><b>✦ SHAY AI ACADEMY</b></a><button id="lang" class="ghost">فارسی</button></header>
+<h1 data-i="title">Checkout</h1>
+<p class="muted" data-i="subtitle">Pay with native USDC on the Base network. Your file is delivered by a private, expiring download link.</p>
+<p id="msg" class="err" role="alert" hidden></p>
+
+<section id="stepStart" class="card" hidden>
+  <h2 id="productName"></h2>
+  <p class="amount"><span id="productPrice"></span> USDC</p>
+  <form id="startForm">
+    <label for="email" data-i="emailLabel">Email for your receipt and download link</label>
+    <input id="email" name="email" type="email" required autocomplete="email" maxlength="254">
+    <div class="row"><button type="submit" id="startBtn" data-i="startBtn">Continue to payment</button></div>
+  </form>
+  <p class="muted" data-i="startNote">You'll get a unique amount (a few extra cents' fractions) that identifies your order. The order stays open for 60 minutes.</p>
+</section>
+
+<section id="stepPay" class="card" hidden>
+  <p><span data-i="statusLabel">Order status:</span> <span id="status" class="status"></span></p>
+  <div id="payBlock">
+    <p data-i="sendExact">Send exactly this amount:</p>
+    <dl class="kv">
+      <dt data-i="amount">Amount</dt><dd><span class="amount" id="amount"></span> USDC</dd><button class="copy" data-copy="amount" data-i="copy">Copy</button>
+      <dt data-i="to">To wallet</dt><dd id="recipient"></dd><button class="copy" data-copy="recipient" data-i="copy">Copy</button>
+      <dt data-i="network">Network</dt><dd id="network"></dd><span></span>
+      <dt data-i="token">Token</dt><dd id="token"></dd><span></span>
+      <dt data-i="expires">Pay before</dt><dd id="expires"></dd><span></span>
+    </dl>
+    <p class="note warn" data-i="warning">Send only native USDC on Base, in one transfer, for the exact amount above (including all decimals). A different amount, token, or network cannot be matched to your order automatically.</p>
+    <div class="row"><button id="walletBtn" data-i="walletBtn">Pay with browser wallet</button></div>
+    <form id="verifyForm">
+      <label for="txHash" data-i="txLabel">Already paid? Paste your transaction hash</label>
+      <input id="txHash" name="txHash" placeholder="0x…" pattern="0x[0-9a-fA-F]{64}" required spellcheck="false" autocomplete="off">
+      <div class="row"><button type="submit" id="verifyBtn" data-i="verifyBtn">Verify payment</button><span id="verifyInfo" class="muted"></span></div>
+    </form>
+  </div>
+  <div id="paidBlock" hidden>
+    <p class="ok" data-i="paidMsg">Payment confirmed. Thank you!</p>
+    <p id="txLine" class="muted"></p>
+    <div class="row"><a id="downloadBtn" class="btn" hidden data-i="download">Download your file</a><button id="newLinkBtn" class="ghost" data-i="newLink">Get a new download link</button></div>
+    <p id="emailInfo" class="muted"></p>
+    <p class="muted" data-i="keepPage">Bookmark this page: it's your private order link and lets you request a new download link later.</p>
+  </div>
+</section>
+
+<section class="card">
+  <h2 data-i="refundTitle">Refund policy</h2>
+  <p class="muted" data-i="refund">Because products are digital downloads, sales are final once a download link has been used. If you paid but can't download, sent the wrong amount, or were charged twice, contact us within 14 days with your transaction hash and we will deliver the file or refund the USDC to the sending wallet (minus network fees). Blockchain payments can't be reversed by us automatically.</p>
+</section>
+<footer><span data-i="help">Help:</span> <a href="mailto:mr.naab021@gmail.com">mr.naab021@gmail.com</a> · <a href="https://t.me/hsyorg" rel="noopener noreferrer" target="_blank">Telegram @hsyorg</a></footer>
+</main>
+<script>
+const T={en:{title:'Checkout',subtitle:'Pay with native USDC on the Base network. Your file is delivered by a private, expiring download link.',emailLabel:'Email for your receipt and download link',startBtn:'Continue to payment',startNote:"You'll get a unique amount (with a tiny fractional cent added) that identifies your order. The order stays open for 60 minutes.",statusLabel:'Order status:',sendExact:'Send exactly this amount:',amount:'Amount',to:'To wallet',network:'Network',token:'Token',expires:'Pay before',copy:'Copy',copied:'Copied',warning:'Send only native USDC on Base, in one transfer, for the exact amount above (including all decimals). A different amount, token, or network cannot be matched to your order automatically.',walletBtn:'Pay with browser wallet',txLabel:'Already paid? Paste your transaction hash',verifyBtn:'Verify payment',paidMsg:'Payment confirmed. Thank you!',download:'Download your file',newLink:'Get a new download link',keepPage:"Bookmark this page: it's your private order link and lets you request a new download link later.",refundTitle:'Refund policy',refund:"Because products are digital downloads, sales are final once a download link has been used. If you paid but can't download, sent the wrong amount, or were charged twice, contact us within 14 days with your transaction hash and we will deliver the file or refund the USDC to the sending wallet (minus network fees). Blockchain payments can't be reversed by us automatically.",help:'Help:',pending:'Waiting for payment',paid:'Paid',expired:'Expired — create a new order if you have not paid yet',checking:'Checking the Base network…',noWallet:'No browser wallet found. Send the payment from any wallet and paste the transaction hash below.',unavailable:'Checkout for this product is not open yet. Join the waitlist from the home page.',notFound:'Order not found. Use the private order link from your browser or email.',emailSent:'A confirmation email was sent to your address.',emailNone:'Save your download link now — email confirmation is not available for this order.',linkValid:'Link valid until',tx:'Transaction'},
+fa:{title:'پرداخت',subtitle:'با USDC اصلی روی شبکه Base پرداخت کنید. فایل شما با یک لینک خصوصی و موقت تحویل داده می‌شود.',emailLabel:'ایمیل برای رسید و لینک دانلود',startBtn:'ادامه و پرداخت',startNote:'یک مبلغ یکتا (با چند رقم اعشار کوچک اضافه) دریافت می‌کنید که سفارش شما را مشخص می‌کند. سفارش ۶۰ دقیقه باز می‌ماند.',statusLabel:'وضعیت سفارش:',sendExact:'دقیقاً این مبلغ را بفرستید:',amount:'مبلغ',to:'به کیف پول',network:'شبکه',token:'توکن',expires:'مهلت پرداخت',copy:'کپی',copied:'کپی شد',warning:'فقط USDC اصلی روی شبکه Base، در یک تراکنش و دقیقاً به مبلغ بالا (با همه ارقام اعشار) بفرستید. مبلغ، توکن یا شبکه متفاوت به‌طور خودکار با سفارش شما تطبیق داده نمی‌شود.',walletBtn:'پرداخت با کیف پول مرورگر',txLabel:'پرداخت کرده‌اید؟ هش تراکنش را وارد کنید',verifyBtn:'بررسی پرداخت',paidMsg:'پرداخت تأیید شد. متشکریم!',download:'دانلود فایل',newLink:'دریافت لینک دانلود جدید',keepPage:'این صفحه را ذخیره کنید؛ لینک خصوصی سفارش شماست و بعداً می‌توانید لینک دانلود جدید بگیرید.',refundTitle:'سیاست بازپرداخت',refund:'چون محصولات فایل دیجیتال هستند، پس از استفاده از لینک دانلود فروش قطعی است. اگر پرداخت کردید ولی نتوانستید دانلود کنید، مبلغ اشتباه فرستادید یا دو بار پرداخت کردید، ظرف ۱۴ روز با هش تراکنش با ما تماس بگیرید تا فایل را تحویل دهیم یا USDC را (منهای کارمزد شبکه) به کیف پول فرستنده برگردانیم. پرداخت‌های بلاکچینی به‌طور خودکار قابل برگشت نیستند.',help:'پشتیبانی:',pending:'در انتظار پرداخت',paid:'پرداخت شده',expired:'منقضی شده — اگر هنوز پرداخت نکرده‌اید سفارش جدید بسازید',checking:'در حال بررسی شبکه Base…',noWallet:'کیف پول مرورگر پیدا نشد. از هر کیف پولی پرداخت کنید و هش تراکنش را پایین وارد کنید.',unavailable:'خرید این محصول هنوز فعال نیست. از صفحه اصلی در لیست انتظار ثبت‌نام کنید.',notFound:'سفارش پیدا نشد. از لینک خصوصی سفارش در مرورگر یا ایمیل استفاده کنید.',emailSent:'ایمیل تأیید به آدرس شما ارسال شد.',emailNone:'لینک دانلود را همین حالا ذخیره کنید — ایمیل تأیید برای این سفارش در دسترس نیست.',linkValid:'اعتبار لینک تا',tx:'تراکنش'}};
+const $=id=>document.getElementById(id);
+const qs=new URLSearchParams(location.search);
+let lang=qs.get('lang')||localStorage.getItem('shayLang')||'en';
+let cfg=null,order=null,key=null,pollTimer=null;
+const t=k=>T[lang][k]||k;
+function applyLang(){document.documentElement.lang=lang;document.body.dir=lang==='fa'?'rtl':'ltr';$('lang').textContent=lang==='en'?'فارسی':'English';document.querySelectorAll('[data-i]').forEach(e=>e.textContent=t(e.dataset.i));localStorage.setItem('shayLang',lang);render();}
+$('lang').onclick=()=>{lang=lang==='en'?'fa':'en';applyLang();};
+function showMsg(text,ok){const m=$('msg');m.hidden=!text;m.textContent=text||'';m.className=ok?'ok':'err';}
+async function api(path,opts={}){const res=await fetch(path,{...opts,headers:{'content-type':'application/json',...(key?{'x-order-key':key}:{}),...(opts.headers||{})}});let body={};try{body=await res.json();}catch{}return{res,body};}
+function product(){return cfg&&cfg.products.find(p=>p.id===(order?order.productId:qs.get('product')));}
+function render(){
+  const p=product();
+  if(!order||!order.amount){if(!order&&p){$('productName').textContent=p.name[lang];$('productPrice').textContent=p.price.replace(/\.0+$/,'');}return;}
+  $('status').textContent=t(order.status);
+  $('amount').textContent=order.amount;$('recipient').textContent=order.recipient;
+  $('network').textContent=`${order.networkName} (chain ID ${order.chainId})`;$('token').textContent=`USDC ${order.usdc}`;
+  $('expires').textContent=new Date(order.expiresAt).toLocaleString(lang==='fa'?'fa-IR':'en-US');
+  const paid=order.status==='paid';$('payBlock').hidden=paid;$('paidBlock').hidden=!paid;
+  if(paid&&order.txHash){$('txLine').innerHTML='';const a=document.createElement('a');a.href=`${order.explorer}/tx/${order.txHash}`;a.target='_blank';a.rel='noopener noreferrer';a.textContent=order.txHash;a.style.color='#c2a9ff';$('txLine').append(t('tx')+': ',a);$('emailInfo').textContent=order.emailStatus==='sent'?t('emailSent'):t('emailNone');}
+}
+function setDownload(d){if(!d)return;const b=$('downloadBtn');b.href=d.url;b.hidden=false;b.title=`${t('linkValid')} ${new Date(d.expiresAt).toLocaleString()}`;}
+async function loadOrder(){const {res,body}=await api(`/api/orders/${encodeURIComponent(order.id)}`);if(!res.ok){showMsg(t('notFound'));$('stepPay').hidden=true;return;}order=body.order;render();}
+$('startForm').onsubmit=async e=>{e.preventDefault();showMsg('');$('startBtn').disabled=true;
+  const {res,body}=await api('/api/orders',{method:'POST',body:JSON.stringify({productId:qs.get('product'),email:$('email').value,lang})});
+  $('startBtn').disabled=false;
+  if(!res.ok){showMsg(body.error?.code==='checkout_unavailable'?t('unavailable'):(body.error?.message||'Error'));return;}
+  order=body.order;key=body.accessKey;history.replaceState(null,'',`/checkout/?order=${order.id}#k=${key}`);
+  $('stepStart').hidden=true;$('stepPay').hidden=false;render();};
+async function verify(hash,attempt=0){clearTimeout(pollTimer);$('verifyBtn').disabled=true;$('verifyInfo').textContent=t('checking');showMsg('');
+  const {res,body}=await api(`/api/orders/${order.id}/verify`,{method:'POST',body:JSON.stringify({txHash:hash})});
+  $('verifyBtn').disabled=false;
+  if(res.ok){$('verifyInfo').textContent='';order=body.order;setDownload(body.download);render();return;}
+  const err=body.error||{message:'Error'};$('verifyInfo').textContent=err.message;
+  if(err.retryable&&attempt<40){pollTimer=setTimeout(()=>verify(hash,attempt+1),6000);}else{showMsg(err.message);}
+}
+$('verifyForm').onsubmit=e=>{e.preventDefault();verify($('txHash').value.trim());};
+$('newLinkBtn').onclick=async()=>{const {res,body}=await api(`/api/orders/${order.id}/download-link`,{method:'POST'});if(res.ok)setDownload(body.download);else showMsg(body.error?.message||'Error');};
+document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=()=>{navigator.clipboard.writeText($(b.dataset.copy).textContent);b.textContent=t('copied');setTimeout(()=>b.textContent=t('copy'),1500);});
+$('walletBtn').onclick=async()=>{const eth=window.ethereum;if(!eth){showMsg(t('noWallet'));return;}showMsg('');
+  try{const [from]=await eth.request({method:'eth_requestAccounts'});const chainHex='0x'+order.chainId.toString(16);
+    try{await eth.request({method:'wallet_switchEthereumChain',params:[{chainId:chainHex}]});}catch(e){if(e.code===4902&&order.chainId===8453){await eth.request({method:'wallet_addEthereumChain',params:[{chainId:chainHex,chainName:'Base',nativeCurrency:{name:'Ether',symbol:'ETH',decimals:18},rpcUrls:['https://mainnet.base.org'],blockExplorerUrls:['https://basescan.org']}]});}else throw e;}
+    const pad=h=>h.replace(/^0x/,'').toLowerCase().padStart(64,'0');
+    const data='0xa9059cbb'+pad(order.recipient)+pad(BigInt(order.amountUnits).toString(16));
+    const hash=await eth.request({method:'eth_sendTransaction',params:[{from,to:order.usdc,data}]});
+    $('txHash').value=hash;verify(hash);
+  }catch(e){showMsg(e.message||String(e));}};
+(async()=>{
+  const c=await fetch('/api/config').catch(()=>null);cfg=c&&c.ok?await c.json():null;
+  const hashKey=new URLSearchParams(location.hash.slice(1)).get('k');
+  if(qs.get('order')&&hashKey){order={id:qs.get('order')};key=hashKey;$('stepPay').hidden=false;applyLang();await loadOrder();}
+  else{const p=product();applyLang();if(!p||!p.purchasable){showMsg(t('unavailable'));return;}$('stepStart').hidden=false;render();}
+})();
+</script></body></html>
